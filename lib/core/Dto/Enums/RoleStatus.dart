@@ -1,0 +1,3 @@
+
+
+enum RoleStatus { user , system }
