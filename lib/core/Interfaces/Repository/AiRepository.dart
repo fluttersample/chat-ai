@@ -16,4 +16,5 @@ abstract class AiRepository {
   Future<Either<Failure, List<ChatResponseModel>>>? chatWithAi({required ChatRequestModel requestModel});
 
 
+
 }

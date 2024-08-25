@@ -47,18 +47,21 @@ class ChatRequestModel {
 class MessagesModel {
   String? content;
   String? role;
+  String? id;
 
-  MessagesModel({this.content, this.role});
+  MessagesModel({this.content, this.role,this.id});
 
   MessagesModel.fromJson(Map<String, dynamic> json) {
     content = json['content'];
     role = json['role'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['content'] = content ?? 'you are a helpful assistant.';
     data['role'] = role ?? 'system';
+    data['id'] = id ;
     return data;
   }
   bool get isUser => role == 'user';

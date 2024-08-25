@@ -269,15 +269,213 @@ class UserDbCompanion extends UpdateCompanion<UserDbData> {
   }
 }
 
+class $ListMessagesTableTable extends ListMessagesTable
+    with TableInfo<$ListMessagesTableTable, ListMessagesTableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ListMessagesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _messagesMeta =
+      const VerificationMeta('messages');
+  @override
+  late final GeneratedColumnWithTypeConverter<MessagesModel?, String> messages =
+      GeneratedColumn<String>('messages', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<MessagesModel?>(
+              $ListMessagesTableTable.$convertermessagesn);
+  @override
+  List<GeneratedColumn> get $columns => [id, messages];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'list_messages_table';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<ListMessagesTableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(_messagesMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ListMessagesTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ListMessagesTableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      messages: $ListMessagesTableTable.$convertermessagesn.fromSql(
+          attachedDatabase.typeMapping
+              .read(DriftSqlType.string, data['${effectivePrefix}messages'])),
+    );
+  }
+
+  @override
+  $ListMessagesTableTable createAlias(String alias) {
+    return $ListMessagesTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<MessagesModel, String> $convertermessages =
+      const MessagesConverter();
+  static TypeConverter<MessagesModel?, String?> $convertermessagesn =
+      NullAwareTypeConverter.wrap($convertermessages);
+}
+
+class ListMessagesTableData extends DataClass
+    implements Insertable<ListMessagesTableData> {
+  final int id;
+  final MessagesModel? messages;
+  const ListMessagesTableData({required this.id, this.messages});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || messages != null) {
+      map['messages'] = Variable<String>(
+          $ListMessagesTableTable.$convertermessagesn.toSql(messages));
+    }
+    return map;
+  }
+
+  ListMessagesTableCompanion toCompanion(bool nullToAbsent) {
+    return ListMessagesTableCompanion(
+      id: Value(id),
+      messages: messages == null && nullToAbsent
+          ? const Value.absent()
+          : Value(messages),
+    );
+  }
+
+  factory ListMessagesTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ListMessagesTableData(
+      id: serializer.fromJson<int>(json['id']),
+      messages: serializer.fromJson<MessagesModel?>(json['messages']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'messages': serializer.toJson<MessagesModel?>(messages),
+    };
+  }
+
+  ListMessagesTableData copyWith(
+          {int? id, Value<MessagesModel?> messages = const Value.absent()}) =>
+      ListMessagesTableData(
+        id: id ?? this.id,
+        messages: messages.present ? messages.value : this.messages,
+      );
+  ListMessagesTableData copyWithCompanion(ListMessagesTableCompanion data) {
+    return ListMessagesTableData(
+      id: data.id.present ? data.id.value : this.id,
+      messages: data.messages.present ? data.messages.value : this.messages,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ListMessagesTableData(')
+          ..write('id: $id, ')
+          ..write('messages: $messages')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, messages);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ListMessagesTableData &&
+          other.id == this.id &&
+          other.messages == this.messages);
+}
+
+class ListMessagesTableCompanion
+    extends UpdateCompanion<ListMessagesTableData> {
+  final Value<int> id;
+  final Value<MessagesModel?> messages;
+  const ListMessagesTableCompanion({
+    this.id = const Value.absent(),
+    this.messages = const Value.absent(),
+  });
+  ListMessagesTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.messages = const Value.absent(),
+  });
+  static Insertable<ListMessagesTableData> custom({
+    Expression<int>? id,
+    Expression<String>? messages,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (messages != null) 'messages': messages,
+    });
+  }
+
+  ListMessagesTableCompanion copyWith(
+      {Value<int>? id, Value<MessagesModel?>? messages}) {
+    return ListMessagesTableCompanion(
+      id: id ?? this.id,
+      messages: messages ?? this.messages,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (messages.present) {
+      map['messages'] = Variable<String>(
+          $ListMessagesTableTable.$convertermessagesn.toSql(messages.value));
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ListMessagesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('messages: $messages')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UserDbTable userDb = $UserDbTable(this);
+  late final $ListMessagesTableTable listMessagesTable =
+      $ListMessagesTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [userDb];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [userDb, listMessagesTable];
 }
 
 typedef $$UserDbTableCreateCompanionBuilder = UserDbCompanion Function({
@@ -386,9 +584,88 @@ class $$UserDbTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+typedef $$ListMessagesTableTableCreateCompanionBuilder
+    = ListMessagesTableCompanion Function({
+  Value<int> id,
+  Value<MessagesModel?> messages,
+});
+typedef $$ListMessagesTableTableUpdateCompanionBuilder
+    = ListMessagesTableCompanion Function({
+  Value<int> id,
+  Value<MessagesModel?> messages,
+});
+
+class $$ListMessagesTableTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ListMessagesTableTable,
+    ListMessagesTableData,
+    $$ListMessagesTableTableFilterComposer,
+    $$ListMessagesTableTableOrderingComposer,
+    $$ListMessagesTableTableCreateCompanionBuilder,
+    $$ListMessagesTableTableUpdateCompanionBuilder> {
+  $$ListMessagesTableTableTableManager(
+      _$AppDatabase db, $ListMessagesTableTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$ListMessagesTableTableFilterComposer(ComposerState(db, table)),
+          orderingComposer: $$ListMessagesTableTableOrderingComposer(
+              ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<MessagesModel?> messages = const Value.absent(),
+          }) =>
+              ListMessagesTableCompanion(
+            id: id,
+            messages: messages,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<MessagesModel?> messages = const Value.absent(),
+          }) =>
+              ListMessagesTableCompanion.insert(
+            id: id,
+            messages: messages,
+          ),
+        ));
+}
+
+class $$ListMessagesTableTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $ListMessagesTableTable> {
+  $$ListMessagesTableTableFilterComposer(super.$state);
+  ColumnFilters<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnWithTypeConverterFilters<MessagesModel?, MessagesModel, String>
+      get messages => $state.composableBuilder(
+          column: $state.table.messages,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
+}
+
+class $$ListMessagesTableTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $ListMessagesTableTable> {
+  $$ListMessagesTableTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get messages => $state.composableBuilder(
+      column: $state.table.messages,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$UserDbTableTableManager get userDb =>
       $$UserDbTableTableManager(_db, _db.userDb);
+  $$ListMessagesTableTableTableManager get listMessagesTable =>
+      $$ListMessagesTableTableTableManager(_db, _db.listMessagesTable);
 }

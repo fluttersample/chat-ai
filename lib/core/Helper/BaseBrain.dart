@@ -1,9 +1,9 @@
 
 
-import 'dart:convert';
+import 'package:ai_test/ai_injection_container.dart';
 import 'package:ai_test/core/Dto/Models/Chat/ChatResponseModel.dart';
 import 'package:ai_test/core/LocalDataBase/AppDatabase.dart';
-import 'package:ai_test/core/LocalDataBase/Entities/User.dart';
+import 'package:ai_test/core/LocalDataBase/Tables/User.dart';
 import 'package:ai_test/core/services/dioConfig/DioConfig.dart';
 import 'package:dio/dio.dart';
 import '../Dto/Models/Login/LoginResponseModel.dart';
@@ -35,8 +35,8 @@ class BaseBrain {
   }
 
   static Future<void> loadUserDataFromLocal() async {
-    final database = AppDatabase.instance();
-    final result = await database.select(database.userDb).get();
+    final dataBase = injector<AppDatabase>();
+    final result = await dataBase.select(dataBase.userDb).get();
 
     if(result.isNotEmpty){
       final userData = result.firstWhere((element) => element.id == 1);

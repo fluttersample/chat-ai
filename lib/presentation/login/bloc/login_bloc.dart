@@ -1,9 +1,9 @@
+import 'package:ai_test/ai_injection_container.dart';
 import 'package:ai_test/core/Dto/Enums/ApiStatus.dart';
 import 'package:ai_test/core/Helper/BaseBrain.dart';
 import 'package:ai_test/core/Dto/Models/Login/LoginRequestModel.dart';
 import 'package:ai_test/core/Dto/Models/Login/LoginResponseModel.dart';
 import 'package:ai_test/core/LocalDataBase/AppDatabase.dart';
-import 'package:ai_test/core/LocalDataBase/Entities/User.dart';
 import 'package:ai_test/core/UseCases/LoginUseCase.dart';
 import 'package:drift/drift.dart';
 import 'package:equatable/equatable.dart';
@@ -53,9 +53,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future<void> _saveUserData(LoginResponseModel data)async{
-    final database = AppDatabase.instance();
-    await database.deleteUserDb();
-    await database.into(database.userDb).insert(UserDbCompanion.insert(
+    final dataBase = injector<AppDatabase>();
+    await dataBase.deleteUserDb();
+    await dataBase.into(dataBase.userDb).insert(UserDbCompanion.insert(
         id: const Value(1),
         refreshToken: data.refreshToken??'',
         user: Value(data.workspace?.user)));

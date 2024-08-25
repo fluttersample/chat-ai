@@ -17,3 +17,10 @@ class SendMessage extends ChatEvent {
 class CancelResponse extends ChatEvent{
 
 }
+class SelectedItem extends ChatEvent{
+      final MessagesModel selectCurrentMessage;
+      final bool unSelectItem;
+      SelectedItem({ required this.selectCurrentMessage  ,
+        this.unSelectItem = false});
+
+}

@@ -1,5 +1,7 @@
 import 'package:ai_test/ai_injection_container.dart';
 import 'package:ai_test/core/Helper/BaseBrain.dart';
+import 'package:ai_test/presentation/chat/bloc/chat_bloc.dart';
+import 'package:ai_test/presentation/chat/ui/ChatView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,10 +12,10 @@ import 'presentation/onboarding/ui/OnboardingView.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await init();
   Bloc.observer = AppBlocObserver();
   BaseBrain.reloadDio();
   await BaseBrain.loadUserDataFromLocal();
-  await init();
 
   runApp(const MyApp());
 }
@@ -26,6 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       builder: (context, child) => ResponsiveBreakpoints.builder(
         child: child!,
         // maxWidth: Get.width,
@@ -44,7 +47,10 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.dmSans().fontFamily
       ),
 
-      home: const OnboardingView(),
+      home: BaseBrain.userEntity.user != null ? BlocProvider(create: (context) {
+        return ChatBloc(chatUseCase: injector())..add(CheckHistory());
+      },
+      child: ChatView(),): const OnboardingView(),
     );
   }
 }
